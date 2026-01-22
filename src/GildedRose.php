@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace GildedRose;
 
 use GildedRose\Contexts\UpdateProductContext;
+use GildedRose\Contracts\UpdateProduct;
 use GildedRose\Strategies\AgedBrieStrategy;
 use GildedRose\Strategies\BackstageStrategy;
 use GildedRose\Strategies\ConjuredStrategy;
@@ -20,7 +21,6 @@ final class GildedRose
         private array $items
     ) {
     }
-
     public function updateQuality(): void
     {
 
@@ -32,14 +32,12 @@ final class GildedRose
             "normal" => NormalProductStrategy::class
         ];
 
-        $context = new UpdateProductContext();
         foreach ($this->items as $item) {
             $handler = $products[$item->name] ?? $products["normal"];
             
             $product = new $handler($item);
             
-            $context->setStrategy($product);
-            $context->updateValues();
+            $product->update();
         }
     }
 }
